@@ -1,0 +1,32 @@
+{% extends "index/index.html" %}
+
+{% block encabezado %}
+    {% include "index/encabezado.html" %}
+{% endblock %}
+
+{% block menu %}
+    {% include "Administrador/menu.html" %}
+{% endblock %}
+
+{% block contenido %}
+{% load static %}
+
+<html>
+  <body>
+
+    <div class="text-center mt-4" style="margin-top: 15px;">
+      <h3 class="fw-bold titulos">ESTADÍSTICAS</h3>
+      <div style="margin-top: 50px;">  <!-- Ajusta el valor del margen según tus preferencias -->
+        <img src="../../../media/grafica3.png">
+      </div>
+    </div>
+  
+   
+  </body>
+</html>
+
+{% endblock %}
+
+{% block piePagina %}
+    {% include "index/piePagina.html" %}
+{% endblock %}

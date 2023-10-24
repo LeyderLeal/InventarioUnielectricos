@@ -1,0 +1,99 @@
+{% extends "index/index.html" %}
+
+{% block contenido %}
+<section class="fondo1">
+    <div class="container mt-5">
+        <div class="d-flex justify-content-center">
+            <div class="usuario">
+                <div class="d-flex justify-content-center">
+                    <div class="logo"></div>
+                </div>
+                <div class="d-flex justify-content-center form_container">
+                    <form action="/loginX/" method="post" enctype="multipart/form-data" class="was-validated p-3">
+                        {% csrf_token %}
+                        
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text" style="height: 100%;"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" name="txtUsername" id="txtUsername" class="form-control input_user letraMenu" placeholder="Usuario" required autocomplete="username">
+                        </div>
+                    
+                        <div class="input-group mb-4">
+                            <div class="input-group-append">
+                                <span class="input-group-text" style="height: 100%;"><i class="fas fa-key"></i></span>
+                            </div>
+                            <input type="password" name="txtPassword" id="txtPassword" class="form-control input_pass letraMenu" placeholder="Contraseña" required autocomplete="current-password">
+                            <div class="input-group-append">
+                                <span class="input-group-text" style="height: 100%; cursor: pointer;"><i id="togglePassword" class="fas fa-eye-slash" onclick="VisibleContraseña()"></i></span>
+                            </div>
+                        </div>
+                    
+                        <div class="d-flex justify-content-center mt-3 login_container">
+                            <button name="button" class="btn-danger letraMenu">Ingresar</button>
+                        </div>
+                    
+                        <div class="col-12 col-md-12 text-center mt-3">
+                            <a type="button" class="letraMenu" href="/vistaRecuperarContraseña">¿Olvidaste tus credenciales?</a>
+                        </div>
+                    
+                        <!-- Agrega el reCAPTCHA v3 -->
+                        <div class="text-center">
+                            <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+       
+    </div>
+</section>
+
+<script>
+    {% if mensaje %}
+    Swal.fire({
+        title: 'Inventario Unielectricos',
+        text: '{{mensaje}}',
+        icon: 'info',
+        confirmButtonColor:'#012e4a',
+        confirmButtonText: 'Confirmar'
+    });
+
+    {% endif %}
+
+
+</script>
+        
+<!-- Agrega el script de reCAPTCHA v3 -->
+<script src="https://www.google.com/recaptcha/api.js?render=6LdrUQ4oAAAAADDPgekD1XJsUYBwUdrYdpAEYrSN"></script>
+<script>
+    grecaptcha.ready(function () {
+        grecaptcha.execute('6LdrUQ4oAAAAADDPgekD1XJsUYBwUdrYdpAEYrSN', { action: '/loginX/' }).then(function (token) {
+            document.getElementById('g-recaptcha-response').value = token;
+        });
+    });
+</script>
+
+<script>
+    //Ojito de ver contraseña
+    function VisibleContraseña() {
+        var passwordField = document.getElementById("txtPassword");
+        var toggleIcon = document.getElementById("togglePassword");
+
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            toggleIcon.className = "fas fa-eye";
+        } else {
+            passwordField.type = "password";
+            toggleIcon.className = "fas fa-eye-slash";
+        }
+    }
+</script>
+
+
+{% endblock %}
+
+
+
+
+

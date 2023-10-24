@@ -1,0 +1,83 @@
+{% extends "index/index.html" %}
+
+{% block encabezado %}
+{% include "index/encabezado.html" %}
+{% endblock %}
+
+{% load static %}
+{% block contenido %}
+<section class="fondo">
+	<div class="container mt-5">
+		<div class="row justify-content-center">
+			<div class="col-md-6 ">
+				<div class="card p-4 colorTerciario" style="border-radius: 30px;">
+					<h3 class="card-title text-center fw-bold titulos mb-4">RECUPERAR CONTRASEÑA</h3>
+					<form action="/RecuperarContraseña/" class="p-2" id="frmRecuperarContra" method="POST" enctype="multipart/form-data" onsubmit="return validar()" novalidate>
+						{% csrf_token %}
+						<div class="mb-4">
+							<label for="Email" class="form-label fw-bold letraMenu">Ingresa Tu Correo:</label>
+							<input type="email" name="Email" id="Email" class="form-control" required>
+						</div>
+						<div class="d-flex justify-content-center mx-5">
+							<button class="btn letraMenu m-1">Enviar</button>
+							<button id="cancelButton" class="btn-danger letraMenu m-1" onclick="cancelar()">Cancelar</button>
+						</div>
+					</form>
+				</div>
+				<script>
+					document.addEventListener('DOMContentLoaded', function() {
+						var frmRecuperarContra = document.getElementById('frmRecuperarContra');
+						frmRecuperarContra.addEventListener('submit', function(event) {
+							event.preventDefault();  // Prevent form submission to handle it manually
+							
+							// Check if the form is being submitted by the "Cancelar" button
+							if (event.submitter && event.submitter.id === 'cancelButton') {
+								// Redirect the user to the login page without sending the form
+								window.location.href = '/loginX/';
+							} else {
+								// Rest of your validation code and form submission...
+								
+								// Send the form data using fetch
+								fetch('/RecuperarContraseña/', {
+									method: 'POST',
+									body: new FormData(frmRecuperarContra),
+									headers: {
+										'X-CSRFToken': '{{ csrf_token }}'
+									}
+								})
+								.then(response => response.json())
+								.then(data => {
+									if (data.estado) {
+										Swal.fire({
+											title: 'RECUPERAR CONTRASEÑA',
+											text: data.mensaje,
+											icon: 'info'
+										}).then(() => {
+											window.location.href = '/loginX/';
+										});
+									} else {
+										Swal.fire({
+											title: 'RECUPERAR CONTRASEÑA',
+											text: data.mensaje,
+											icon: 'error'
+										});
+									}
+								})
+								.catch(error => {
+									console.error('Error:', error);
+								});
+							}
+						});
+					});
+				</script>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+{% endblock %}
+
+{% block piePagina %}
+{% include "index/piePagina.html" %}
+{% endblock %}

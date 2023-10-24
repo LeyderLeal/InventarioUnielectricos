@@ -1,0 +1,43 @@
+{% extends "index/index.html" %}
+
+{% block encabezado %}
+    {% include "index/encabezado.html" %}
+{% endblock %}
+
+{% block menu %}
+    {% include "Empleado/menuE.html" %}
+{% endblock %}
+
+{% block contenido %}
+{% load static %}
+
+{% for producto in listaProductos %}
+<script> cargarProductos("{{producto.id}}","{{producto.proCodigo}}","{{producto.proNombre}}","{{producto.proDescripcion}}",
+        "{{producto.proCantidad}}","{{producto.proPrecio}}","{{producto.proUnidadMedida}}","{{producto.proFoto}}","{{producto.proMarca}}")</script>
+{% endfor %}
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    //llama la funcion de mostrar los productos con poca cantidad
+    cantidad()
+    // Llama a la función para cargar DataTable en la tabla 'tblProductos'
+        cargarDataTable($("#tblProductos"), "Inventario de Productos", 11);
+    });
+    </script>
+
+
+<section class="fondo2">
+  <div class="container">
+      <div class="text-center">
+          <h1 class="titulos fw-bold" style="font-size: 50px">BIENVENIDOS A <span style="color: #960b0b;"> UNIELECTRICOS </span></h1>
+          <h3 class="letraMenu">El Mejor Inventario Para Tu Negocio</h3>
+      </div>    
+  </div>
+<section>
+
+
+{% endblock %}
+{% block piePagina %}
+    {% include "index/piePagina.html" %}
+{% endblock %}

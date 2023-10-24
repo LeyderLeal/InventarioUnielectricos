@@ -1,0 +1,103 @@
+{% extends "index/index.html" %}
+
+{% block encabezado %}
+{% include "index/encabezado.html" %}
+{% endblock %}
+
+{% block menu %}
+{% include "Empleado/menuE.html" %}
+{% endblock %}
+
+{% block contenido %}
+
+{% for producto in listaProductos %}
+    <script> cargarProductos("{{producto.id}}","{{producto.proCodigo}}","{{producto.proNombre}}","{{producto.proDescripcion}}",
+            "{{producto.proCantidad}}","{{producto.proVenta}}","{{producto.proCompra}}","{{producto.proPrecio}}","{{producto.proUnidadMedida}}","{{producto.proFoto}}","{{producto.proMarca}}")</script>
+    {% endfor %}
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+    //llama la funcion de mostrar los productos con poca cantidad
+    cantidad()
+    // Llama a la función para cargar DataTable en la tabla 'tblProductos'
+        cargarDataTable($("#tblProductos"), "Inventario de Productos", 11);
+    });
+    </script>
+
+
+<br>
+    <div class="container p-5">
+        <div class="d-flex justify-content-center align-items-center">
+            <a href="/vistaRegistrarProducto/">
+            <button class="btn colorSecundario titulos">Registrar Producto</button>
+            </a>
+        </div>
+    
+        <div class="text-center mt-5">
+            <table id="tblProductos" class="table custom-table table-hover table-bordered" style="font-size: 14px;">
+                <thead class="colorSecundario text-white">
+                    <tr class="colorSecundario titulos">
+                        <th colspan="11" class="text-white text-center">INVENTARIO PRODUCTOS</th>
+                    </tr>
+                    <tr class="colorPrimario">
+                        <th class="top-left">Id</th>
+                        <th class="top-left">Nombre</th>
+                        <th class="top-left">Descripción</th>
+                        <th class="top-left">Unidad Medida</th>
+                        <th class="top-left">Precio</th>
+                        <th class="top-left">Stock</th>
+                        <th class="top-left">Ventas</th>
+                        <th class="top-left">Compras</th>
+                        <th class="top-left">Marca</th>
+                        <th class="top-left">Foto</th>
+                        <th class="top-left">Acción</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white">
+                    {% for producto in listaProductos %}
+                    <tr>
+                        <td>{{producto.proCodigo}}</td>
+                        <td>{{producto.proNombre}}</td>
+                        <td>{{producto.proDescripcion}}</td>
+                        <td>{{producto.proUnidadMedida}}</td>
+                        <td class="text-end">${{producto.proPrecio}}</td>
+                        <td>{{producto.proCantidad}}</td>
+                        <td>{{producto.proVenta}}</td>
+                        <td>{{producto.proCompra}}</td>
+                        <td>{{producto.proMarca}}</td>
+                        <td><img src="../../../media/{{producto.proFoto}}" width="50" height="50"
+                                alt=""></td>
+                        <td class="text-center" style="font-size: 3vh;">
+                            <a class="fa fa-eye text-dark" style="text-decoration: none;" data-bs-toggle="modal" data-bs-target="#staticBackdropModal" onclick="detalleProductos('{{producto.proCodigo}}')" type="button"></a>
+                            {% comment %} <a href="/editarProducto/{{producto.id}}/" style="text-decoration: none;"><i class="fa fa-edit text-warning" type="button"></i></a> {% endcomment %}
+                            {% comment %} <i class="fa fa-trash text-danger" onclick="modalEliminarProducto('{{producto.proCodigo}}')" type="button"></i> {% endcomment %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>            
+            </table>
+
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdropModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header text-white" style="background-color: #012E4A;">
+                            <h6 class="modal-title fs-5 fw-bold titulos" id="staticBackdropLabel">DETALLE PRODUCTO</h6>
+                            <button type="button" class="btn-close bg-white" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" id="datosModal"></div>
+                        <div class="modal-footer d-flex justify-content-center">
+                            <button type="button" class="btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+{% endblock %}
+{% block piePagina %}
+{% include "index/piePagina.html" %}
+{% endblock %}

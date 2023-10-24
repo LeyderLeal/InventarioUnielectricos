@@ -1,0 +1,217 @@
+{% extends "index/index.html" %}
+
+{% block encabezado %}
+    {% include "index/encabezado.html" %}
+{% endblock %}
+
+{% block menu %}
+    {% include "Administrador/menu.html" %}
+{% endblock %}
+
+{% block contenido %}
+{% load static %}
+
+    {% for producto in productos %}
+    <script> cargarProductos("{{producto.id}}","{{producto.proCodigo}}","{{producto.proNombre}}","{{producto.proDescripcion}}",
+            "{{producto.proCantidad}}","{{producto.proPrecio}}","{{producto.proUnidadMedida}}","{{producto.proFoto}}","{{producto.proMarca}}")</script>
+    {% endfor %}
+
+<style>
+  /* Estilos CSS personalizados */
+  body {
+      background-color: #f4f4f4;
+  }
+  .container {
+    background-color: #fff;
+    border-radius: 10px;
+    width: 1000px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    margin-top: 20px;
+    margin-bottom: 100px;
+    height: 750px;
+}
+  .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+  }
+  .btn-primary:hover {
+      background-color: #0056b3;
+      border-color: #0056b3;
+  }
+</style>
+
+<div class="container colorTerciario titulos mt-5">
+  <div class="text-center">
+      <h3 class="mb-4 titulos fw-bold" style="font-size: 30px;">REGISTRAR VENTA</h3>
+
+      <form action="/registrarVenta/" id="registrarVenta" class="row g-4 needs-validation was-validated" method="POST" enctype="multipart/form-data" novalidate>
+
+        {% csrf_token %}
+
+        <div class="col-12 col-md-4">
+            <label for="cliente" class=" fw-bold">Cliente:</label>
+            <input type="text" name="cliente" value="" id="cliente" class="form-control" required>
+        </div>
+
+        <div class="col-12 col-md-4">
+          <label for="txtDireccion" class="fw-bold">Dirección:</label>
+          <input type="text" name="txtDireccion" value="" id="txtDireccion" class="form-control" >
+        </div>
+        
+        <div class="col-12 col-md-4">
+          <label for="vendedor" class="titulos fw-bold">Vendedor:</label>
+            <p value="{{usuario.id}}" name="vendedor" id="vendedor">{{ usuario.first_name }}{{ usuario.last_name }}</p>
+        </div>
+        
+        <div class="col-12 col-md-12">
+          <div class="col-lg-12">
+            <label for="observaciones" class="titulos fw-bold">Observaciones:</label>
+            <textarea name="observaciones" value="" id="observaciones" cols="30" rows="5" class="form-control"></textarea>
+          </div>
+        </div>
+
+        <div class="text-center">
+          <button type="button" id="btnAbrirModalAnexarProducto" class="btn mb-3 titulos" data-bs-toggle="modal" data-bs-target="#modalProducto" style="background-color: #012E4A; ">
+            Anexar Producto
+          </button>
+        </div>
+        
+        <div id="vistaTablaProductos w-75 bordered-3 table-responsive " style="margin: 0 auto">
+          <table class="table table-bordered table-stripped mt-4">
+            <thead>
+              <tr class="colorPrimario text-white text-center titulos fw-bold">
+                <th>Código</th>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Unidad Medida</th>
+                <th>Precio Unidad</th>
+                <th>Precio Acumulativo</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody id="datosTablaProductos">
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="col-12 col-md-12">
+          <h5 class="titulos fw-bold">Precio Total:</h5>
+          <h5 id="precioTotal" class="fw-bold precioTotal ">$0</h5>
+        </div>
+
+        <div class="text-center"> 
+          <button type="button" class="btn titulos" style="background-color: #012E4A;" id="btnRegistrarDetalleVenta" style="margin: 0 auto">Finalizar Registro</button>
+        </div>
+
+        <!-- Hidden field to store the selected products -->
+        <input type="hidden" name="productosVendidos" id="productosVendidos">
+        <input type="hidden" name="vendedor" value="{{ usuario.id }}">
+
+        <!-- Campo oculto para almacenar la cantidad disponible de cada producto -->
+        {% for producto in productos %}
+        <input type="hidden" id="cantidad-{{producto.id}}" value="{{producto.proCantidad}}">
+        {% endfor %}
+
+      </form>
+    </div>
+
+    <!-- The Modal -->
+    <div class="modal" id="modalProducto">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header colorSecundario text-white tituloModal">
+            <h4 class="fw-bold titulos">Anexar Producto</h4>
+            <button type="button" class="btn-close bg-white text-white" data-bs-dismiss="modal"></button>
+          </div>
+
+
+          <!-- Modal body -->
+          <div class="modal-body ">
+            <form id="frmEntradaProducto" action="">
+              
+              <div class="form-group row">
+                <div class="col-lg-12 mb-3">
+                  <label for="txtProducto" class="fw-bold">Producto:</label>
+                  <input type="text" id="txtBusqueda" class="form-control" placeholder="Buscar producto">
+                  <select name="txtProducto" id="txtProducto" class="form-select" onchange="precioAuto(); UnidadAut()" onclick="precioAuto(); UnidadAut()">
+                    <option value="">Seleccione</option>
+                    {% for producto in productos %}
+                    <option value="{{producto.id}}">{{producto.proCodigo}}-{{producto.proNombre}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group row mb-4">
+                <div class="col-lg-4">
+                  <label for="cantidad" class="fw-bold">Cantidad:</label>
+                  <input type="number" name="cantidad" id="cantidad" class="form-control calcular-precio">
+                </div>
+
+                <div class="col-lg-4">
+                  <label for="txtUnidadMedida" class="fw-bold" >Unidad Medida:</label>
+                  <div class="input-group">
+                    <input type="text" name="txtUnidadMedida" id="txtUnidadMedida" class="form-control" disabled>
+                  </div>
+                </div>
+          
+                <div class="col-lg-4">
+                  <label for="precio" class="fw-bold" >Precio Producto(Unidad):</label>
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="number" name="precio" id="precio" class="form-control calcular-precio" disabled>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="text-center col-lg-12 mb-4">
+                <h5 class="fw-bold">Precio Acumulado:</h5>
+                <h5 id="precioAcumulado" class="fw-bold precio">$0</h5>
+              </div>
+
+              <div class="text-center">
+                <button type="button" class="btn colorSecundario" id="btnAgregarProductoDetalleVenta" data-bs-dismiss="modal">Agregar Detalle</button>
+              </div>
+
+            </form>
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn-danger" data-bs-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var precios = document.querySelectorAll('.precio');
+  precios.forEach(function (precio) {
+      var precio_sinFormato = precio.textContent.trim().replace('$', '');
+      var precio_formateado = parseFloat(precio_sinFormato).toLocaleString('es-CO', {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2
+      });
+
+      precio.textContent = '$ ' + precio_formateado;
+  });
+});
+
+</script>
+
+
+
+{% endblock %}
+{% block piePagina %}
+    {% include "index/piePagina.html" %}
+{% endblock %}
+
+
+

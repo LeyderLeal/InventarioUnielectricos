@@ -1,0 +1,71 @@
+{% extends "index/index.html" %}
+{% block encabezado %}
+{% include "index/encabezado.html" %}
+{% endblock %}
+{% block menu %}
+{% include "Administrador/menu.html" %}
+{% endblock %}
+{% block contenido %}
+
+<div class="container">
+    <div class="mt-2">
+        <div class="was-validated">
+            <div class="row d-flex">
+                <div class="p-1 text-center">
+                
+                        <div class="d-flex justify-content-center align-items-center">
+                            <a href="/vistaRegistrarProveedor/">
+                            <button class="btn colorSecundario titulos" >Registrar Proveedor</button>
+                            </a>
+                        </div>
+
+                        {% csrf_token %}
+                        
+                        <table id="tblProductos" class="table custom-table table-hover table-bordered" style="font-size: 14px;"><br><br>
+                            <thead class="colorSecundario text-white">
+                                <tr class="colorSecundario ">
+                                    <th colspan="5" class="text-white text-center">PROVEEDORES</th>
+                                </tr>
+                                
+                                <tr class="colorPrimario">
+                                    <th>Identificación</th>
+                                    <th>Nombre</th>
+                                    <th>Teléfono</th>
+                                    <th>Tipo Proveedor</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white">
+                                {% for proveedor in listaProveedor %}
+                                <tr>
+                                        <td>{{ proveedor.proIdentificacion }}</td>
+                                    <td>{{ proveedor.proNombre }}</td>
+                                    <td>{{ proveedor.proTelefono }}</td>
+                                    <td>{{ proveedor.proTipo }}</td>
+                                    <td class="top-left text-center" style="font-size: 3vh;">
+                                        <a href="/editarProveedor/{{proveedor.id}}/" style="text-decoration: none;"><i class="fa fa-edit text-warning"></i></a>
+                                        <i class="fa fa-trash text-danger" onclick="modalEliminarProveedor('{{proveedor.proIdentificacion}}')" type="button"></i>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Llama a la función para cargar DataTable en la tabla 'tblProductos'
+        cargarDataTable($("#tblProductos"), "Inventario de Productos", 5);
+    });
+</script>
+
+
+{% endblock %}
+{% block piePagina %}
+{% include "index/piePagina.html" %}
+{% endblock %}

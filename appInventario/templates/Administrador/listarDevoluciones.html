@@ -1,0 +1,85 @@
+{% extends "index/index.html" %}
+{% block encabezado %}
+{% include "index/encabezado.html" %}
+{% endblock %}
+{% block menu %}
+{% include "Administrador/menu.html" %}
+{% endblock %}
+{% block contenido %}
+<style>
+    .input-group {
+        display: flex;
+        align-items: center;
+    }
+
+    #searchButton {
+        flex: 1;
+        max-height: 38px; /* Ajusta la altura según tus preferencias */
+    }
+</style>
+
+<div class="container">
+    <h3 class="card-title text-center titulos"><strong>VENTAS REALIZADAS</strong></h3> 
+
+    <div class="input-group col-md-3">
+        <input type="text" id="searchInput" class="form-control" placeholder="Buscar ventas...">
+        <div class="input-group-append">
+            <button id="searchButton" class="btn colorSecundario" type="button">Buscar</button>
+        </div>
+    </div>
+
+    {% for venta in ventas %}
+    <div class="card mb-4 mt-3 custom-table">
+        <div class="card-body ">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Código Factura:</strong> {{ venta.venCodigo }}</p>
+                    <p><strong>Vendedor:</strong> {{ venta.venVendedor.get_full_name }}</p>
+                    <p><strong>Cliente:</strong> {{ venta.venCliente }}</p>
+                    <p><strong>Dirección:</strong> {{ venta.venDireccion }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Fecha Entrega:</strong> {{ venta.fechaHoraCreacion }}</p>
+                    <p><strong>Observaciones:</strong> {{ venta.venObservaciones}}</p>
+                    <h5 class="mt-5"><strong>Precio Total: </strong> ${{venta.venPrecioTotal}}</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <h4 class="card-title">Productos Vendidos:</h4>
+            <table class="table table-striped ">
+                <thead>
+                    <tr class= "colorPrimario text-white">
+                        <th>Código</th>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Unidad Medida</th>
+                        <th>Precio</th>
+                        <th>Precio Acumulado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for detalle in venta.detalleventa_set.all %}
+                        <tr>
+                            <td>{{detalle.detProducto.proCodigo}}</td>
+                            <td>{{detalle.detProducto.proNombre}}</td>
+                            <td>{{detalle.detCantidad}}</td>
+                            <td>{{detalle.detProducto.proUnidadMedida}}</td>
+                            <td>${{detalle.detPrecioUnitario}}</td>
+                            <td>${{detalle.detPrecioAcumulativo}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="card-body">
+                <a href="{% url 'generar_pdf_venta' venta.venCodigo %}" target="_blank" id="verPDF" class="btn text-white" style="background-color: #012E4A;">Generar PDF</a>
+            </div>
+        
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

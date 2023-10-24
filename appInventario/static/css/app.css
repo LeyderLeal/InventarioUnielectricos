@@ -1,0 +1,283 @@
+/* Estilos generales */
+@font-face {
+  font-family: letraMenu;
+  src: url(../Fonts/Corben/Corben-Regular.ttf);
+}
+
+@font-face {
+  font-family: titulos;
+  src: url(../Fonts/Philosopher/Philosopher-Regular.ttf);
+}
+
+
+
+html, body{
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  background-size: cover;
+  background-repeat: repeat;
+  background-position: center;
+}
+
+
+
+/* Tipos Letras */
+.titulos{
+  font-family: titulos;
+}
+
+.letraMenu{
+  font-family: letraMenu;
+}
+
+
+
+/* Colores Pagina */
+.colorPrimario{
+  background-color: #960b0b;
+}
+
+.colorSecundario{
+  background-color: #012e4a;
+}
+
+.colorTerciario{
+  background-color: #E6ECF5;
+}
+
+.colorTerciarioo{
+  background-color: #F0F0F1;
+}
+
+
+/* color de los botones del datatable*/
+.colorBoton{
+  background-color: #E6ECF5 !important;
+  border: 1px !important ;
+}
+
+.colorPdf{
+  background-color: #E6ECF5 !important;
+  border: 1px !important ;
+}
+
+.botonExcel{
+  background-color: #E6ECF5 !important;
+  border: 1px !important ;
+}
+
+
+
+.fondo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('../img/img1.jpg');
+  background-size: cover;
+  background-position: center center;
+}
+
+.fondo1 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('../img/img4.jpg');
+  background-size: cover;
+  background-position: center center;
+}
+
+.fondo2 {
+  background-attachment: fixed; 
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('../img/img2.jpg');
+  background-size: cover; 
+  background-position: center center;
+}
+
+
+
+/* Estilos para los botones */
+.btn {
+  display: inline-block;
+  padding: 12px 20px !important;
+  border: none !important;
+  border-radius: 25px !important; /* Bordes redondeados */
+  cursor: pointer !important;
+  text-decoration: none  !important;
+  color: #fff !important; /* Color de texto predeterminado */
+  box-shadow: 0px 4px 6px #0b229657 !important; /* Sombra suave */
+  background-color: #012e4a !important;
+
+}
+
+.btn:hover {
+  background-color: #9a9b9b !important; /* Cambia el color de fondo al pasar el mouse */
+  color: white !important;
+}
+
+.btn-danger {
+  background-color: #960b0b; /* Color rojo */
+  border-radius: 25px !important; 
+  display: inline-block;
+  padding: 15px 18px !important;
+  border: none !important;
+  box-shadow: 0px 4px 6px #960b0b57 !important; /* Sombra suave */
+}
+
+.btn-danger:hover {
+  background-color: #A30B0B !important; /* Cambia el color de fondo al pasar el mouse */
+}
+
+
+/*Botones de buscar */
+.btnInicioS {
+  display: inline-block;
+  padding: 10px 17px !important;
+  border: none !important;
+  border-top-right-radius: 0; /* Bordes superior izquierdo recto */
+  border-bottom-left-radius: 0; /* Bordes inferior izquierdo recto */
+  border-top-right-radius: 10px !important; /* Bordes superior derecho redondeado */
+  border-bottom-right-radius: 10px !important; /* Bordes inferior derecho redondeado */
+  cursor: pointer !important;
+  text-decoration: none  !important;
+  color: #fff !important; /* Color de texto predeterminado */
+  box-shadow: 0px 4px 6px #0b229657 !important; /* Sombra suave */
+  background-color: #012e4a !important;
+
+}
+
+
+/* Tablas */
+.selectTable{
+  background-color: #E6ECF5 !important;
+  font-family: letraMenu;
+}
+.custom-table{
+  border-radius: 15px; /*Establece esquinas curvas */
+  border: 1px solid #808080;
+  box-shadow: 8px 8px 5px 0px #E6ECF5;
+  overflow: hidden; /* Asegura que el contenido no se extienda más allá de las esquinas curvas */
+}
+
+
+
+/* Boton numero paginacion dataTables */
+.page-item.active .page-link {
+  background-color: #012e4a !important;
+  border: 1px solid black;
+  color: white !important;
+}
+
+.page-link {
+  background-color: #E6ECF5 !important;
+  font-family: letraMenu;
+  color: black !important;
+}
+
+
+
+.fondo3 {
+  position: relative;
+  overflow: hidden;
+}
+
+#prevBtn,
+#nextBtn {
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+
+
+/* Estilos para el pie de página */
+footer{
+  /* background-color: #960b0b; */
+  position: sticky;
+  min-height: 20%;
+
+  width: 100%;
+  
+}
+
+
+
+/* Estilos para pantallas pequeñas, como dispositivos móviles */
+@media screen and (max-width: 767px) {
+  /* Aquí van los estilos para pantallas pequeñas */
+}
+
+/* Estilos para pantallas medianas, como tablets */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  /* Aquí van los estilos para pantallas medianas */
+}
+
+/* Estilos para pantallas grandes, como computadoras de escritorio */
+@media screen and (min-width: 1025px) {
+  /* Aquí van los estilos para pantallas grandes */
+}
+
+/* Estilos personalizados para la tabla */
+#tablaProductos {
+  font-family: Arial, sans-serif;
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Estilos para la tabla de los stock*/
+#tablaProductos {
+  border-collapse: collapse;
+  margin: 0 auto;
+  border-radius: 10px; /* Agrega bordes redondeados a la tabla */
+  overflow: hidden; /* Asegura que los bordes redondeados sean visibles */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#tablaProductos th,
+#tablaProductos td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+#tablaProductos th {
+  background-color: #960b0b;
+  color: #fff;
+}
+
+#tablaProductos tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+#tablaProductos tr:hover {
+  background-color: #ddd;
+}
+
+/* Estilo para el contenedor de la tabla con scroll */
+.tabla-con-scroll {
+  max-height: 200px; /* Establece la altura máxima deseada */
+  overflow-y: auto; /* Habilita el scroll vertical cuando se excede la altura máxima */
+}
+
+
+
+#flexSwitchCheckChecked{
+  background-color: #9f1818 !important;
+ 
+} 

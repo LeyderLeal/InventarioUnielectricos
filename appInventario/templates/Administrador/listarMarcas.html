@@ -1,0 +1,61 @@
+{% extends "index/index.html" %}
+{% block encabezado %}
+{% include "index/encabezado.html" %}
+{% endblock %}
+{% block menu %}
+{% include "Administrador/menu.html" %}
+{% endblock %}
+{% block contenido %}
+<div class="container">
+    <div class="mt-2">
+        <div class="was-validated">
+            <div class="row d-flex">
+                <div class=" p-1 text-center">
+                        
+                        <div class="d-flex justify-content-center align-items-center">
+                            <a href="/vistaRegistrarMarca/">
+                            <button class="btn colorSecundario titulos" >Registrar Marca</button>
+                            </a>
+                        </div>
+
+                        {% csrf_token %}
+                        <table id="tblProductos" class="table custom-table" style="font-size: 14px;"><br><br>
+                            <thead class="colorSecundario text-white">
+                                <tr class="colorSecundario">
+                                    <th colspan="2" class="text-white text-center">MARCAS</th>
+                                </tr>
+                                <tr class="colorPrimario">
+                                    <th>Nombre</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white">
+                                {% for marca in listaMarca %}
+                                    <tr>
+                                        <td>{{ marca.marcaNombre }}</td>
+                                        <td class="text-center" style="font-size: 3vh;">
+                                            <i class="fa fa-trash text-danger" onclick="modalEliminarMarca('{{marca.marcaNombre}}')" type="button"></i>
+                                        </td>
+                                    </tr>
+                                
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Llama a la función para cargar DataTable en la tabla 'tblProductos'
+        cargarDataTable($("#tblProductos"), "Inventario de Productos", 2);
+    });
+</script>
+
+{% endblock %}
+{% block piePagina %}
+{% include "index/piePagina.html" %}
+{% endblock %}

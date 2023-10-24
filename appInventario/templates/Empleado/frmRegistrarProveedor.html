@@ -1,0 +1,126 @@
+{% extends "index/index.html" %}
+
+{% block encabezado %}
+    {% include "index/encabezado.html" %}
+{% endblock %}
+
+{% block menu %}
+    {% include "Empleado/menuE.html" %}
+{% endblock %}
+
+{% load static %}
+{% block contenido %}
+
+<style>
+  /* Estilos CSS personalizados */
+  body {
+      background-color: #f4f4f4;
+  }
+  .container {
+    background-color: #fff;
+    border-radius: 10px;
+    width: 1000px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    margin-top: 20px;
+    margin-bottom: 100px;
+    height: 420px;
+}
+  .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+  }
+  .btn-primary:hover {
+      background-color: #0056b3;
+      border-color: #0056b3;
+  }
+</style>
+
+<br>
+<div class="w-100 mb-3">
+
+  <div class="container colorTerciario titulos">
+    <div class="text-center">
+        <div class="p-3 text-center row justify-content-center">
+          <h3 class="mb-4 titulos fw-bold">REGISTRAR PROVEEDOR</h3>
+          
+          <form action="/registrarProveedor/" id="frmRegistrarProveedor" class="row g-4 needs-validation was-validated" method="POST" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+
+            <div class="col-12 col-md-6">
+              <label for="txtIdentificacion" class="titulos fw-bold">Numero de identificacion o NIT: </label>
+              <input type="number" name="txtIdentificacion" id="txtIdentificacion" class="form-control" cols="30" rows="5" required>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label for="txtNombre" class="titulos fw-bold">Nombre: </label>
+              <input type="text" name="txtNombre" id="txtNombre" class="form-control" required>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label for="txtCelular" class="titulos fw-bold">Celular: </label>
+              <input type="text" name="txtCelular" id="txtCelular" class="form-control" required>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label for="tipoProveedor" class="form-label titulos fw-bold">Tipo</label>
+              <select class="form-select titulos fw-bold" id="tipoProveedor" name="tipoProveedor" required>
+                <option selected disabled>Seleccione</option>
+                {% for tipo in tipoProveedor %}
+                <option value="{{tipo.0}}">{{tipo.1}}</option>
+                {% endfor %}
+              </select>
+            </div>
+            
+
+            <div class="col-12 col-md-12 mt-4">
+              <button class="btn text-white mb-2 titulos" style="background-color: #012E4A;">Registrar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+
+      {% if mensaje %}  
+        {% if estado %}  
+            <script>
+                Swal.fire({
+                    title: 'Registro Proveedor',
+                    text: '{{mensaje}}',
+                    icon: 'success',               
+                    confirmButtonColor: '#3085d6',             
+                    confirmButtonText: 'Aceptar',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let formulario = document.getElementById('frmRegistrarDevolutivo');
+                        formulario.reset();
+                        location.href="/listarProveedor/"
+                    }
+                });
+            </script>
+        {% else %}
+            <script>
+                Swal.fire({
+                    title: 'Registro Proveedor',
+                    text: '{{mensaje}}',
+                    icon: 'warning',               
+                    confirmButtonColor: '#3085d6',             
+                    confirmButtonText: 'Aceptar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                    
+                    }
+                })
+            </script>
+        {% endif %}
+    {% endif %}
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block piePagina %}
+    {% include "index/piePagina.html" %}
+{% endblock %}

@@ -1,0 +1,72 @@
+body,
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.container{
+    padding: 5%;
+    height: 100%;
+    width: 100%;
+}
+
+
+.usuario {
+    height: 450px;
+    width: 360px;
+    background: #E6ECF5;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 10px;
+
+}
+
+.logo {
+    position: absolute;
+    height: 165px;
+    width: 165px;
+    top: -75px;
+    border-radius: 50%;
+    background: #ffffff;
+    background-image: url("../img/LogoUni.svg");
+    background-size: cover;
+    background-position: center;
+    
+    padding: 10px;
+    text-align: center;
+    border: 2px solid #960b0b; /* Agregamos este estilo para el borde rojo */
+}
+
+.form_container {
+    margin-top: 7rem;
+}
+
+.login_container {
+    padding: 0 2rem;
+}
+.input-group-text {
+    background: #960b0b;
+    color: white;
+    border: 0;
+    border-radius: 0.25rem 0 0 0.25rem;
+}
+
+
+.input_user,
+.input_pass:focus {
+    box-shadow: none;
+    outline: 0px;
+}
+.custom-checkbox .custom-control-input:checked~.custom-control-label::before {
+    background-color: #960b0b;
+}

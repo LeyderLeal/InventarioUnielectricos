@@ -1,0 +1,236 @@
+{% extends "index/index.html" %}
+
+{% block encabezado %}
+    {% include "index/encabezado.html" %}
+{% endblock %}
+
+{% block menu %}
+    {% include "Administrador/menu.html" %}
+{% endblock %}
+
+{% block contenido %}
+
+{% load static %}
+
+{% for producto in productos %}
+    <script> cargarProductos("{{producto.id}}","{{producto.proCodigo}}","{{producto.proNombre}}","{{producto.proDescripcion}}",
+            "{{producto.proCantidad}}","{{producto.proPrecio}}","{{producto.proUnidadMedida}}","{{producto.proFoto}}","{{producto.proMarca}}")</script>
+{% endfor %}
+
+<div class="container">
+  <h3 class="card-title text-center titulos"><strong>DETALLES DE COMPRAS</strong></h3>
+
+  <div class="card mb-4 mt-3 custom-table">
+
+      <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Código Factura:</strong> {{ compra.comCodigo }}</p>
+                <p><strong>Proveedor:</strong> {{ compra.comProveedor.proNombre }}</p>
+                <p><strong>Recibido Por:</strong> {{ compra.comUsuarioRecibe.get_full_name }}</p>
+                <p><strong>Fecha Entrega:</strong> {{ compra.fechaHoraCreacion }}</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Observaciones: </strong> {{ compra.comObservaciones }}</p>
+                <h5 class="mt-5"><strong>Precio total: </strong> <span class="precio">{{compra.comPrecioTotal }}</span></h5>
+                {% comment %} <h5 class="mt-5"><strong>Precio Total: </strong> ${{ compra.comPrecioTotal }}</h5> {% endcomment %}
+            </div>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <h4 class="card-title">Productos Comprados:</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr class="colorPrimario text-white">
+                    <th>Código</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Devueltos</th>
+                    <th>Unidad Medida</th>
+                    <th>Precio</th>
+                    <th>Precio Acumulado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for detalle in compra.detallecompra_set.all %}
+                <tr data-cantidad-comprada="{{detalle.detCantidad}}" data-producto-id="{{detalle.detProducto.proCodigo}}">
+                    <td>{{ detalle.detProducto.proCodigo }}</td>
+                    <td>{{ detalle.detProducto.proNombre }}</td>
+                    <td>{{ detalle.detCantidad }}</td>
+                    <td>{{ detalle.detDevueltos }}</td>
+                    <td>{{ detalle.detProducto.proUnidadMedida }}</td>
+                    <td class="precio">${{ detalle.detPrecioUnitario }}</td>
+                    <td class="precio">${{ detalle.detPrecioAcumulativo }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+      </div>
+  </div>
+
+
+  <div class="container titulos mt-4">
+    <hr>
+    <div class="text-center">
+      <h3 class="card-title text-center titulos"><strong>DEVOLUCIÓN COMPRA</strong></h3>
+
+      <form action="/registrarDevolucionesProveedor/" id="registrarDevolucionesProveedor" class="row g-4 needs-validation was-validated mt-3" method="POST" enctype="multipart/form-data" novalidate>
+
+        {% csrf_token %}
+
+        <div class="text-center">
+          <button type="button" id="btnAbrirModalAnexarProducto" class="btn mb-3 titulos" data-bs-toggle="modal" data-bs-target="#modalProducto" style="background-color: #012E4A;" data-cantidad-comprada="{{ detalle.detCantidad }}">
+            Anexar Producto Devuelto
+          </button>
+        </div>
+
+        <div class="col-md-12">
+            <label for="usuario" class="form-label fw-bold">Usuario que Realiza la Devolución:</label>
+            <p value="{{usuario.id}}" name="usuario" id="usuario">{{ usuario.first_name }} {{ usuario.last_name}}</p>
+        </div>
+
+        <div class="col-12 mt-4">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="colorPrimario text-white">
+                        <tr>
+                            <th>Código</th>
+                            <th>Producto</th>
+                            <th>Cantidad Devuelta</th>
+                            <th>Unidad Medida</th>
+                            <th>Precio Unidad</th>
+                            <th>Precio Acumulativo</th>
+                            <th>Metodo Devolución</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="datosTablaProductos">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-12">
+          <h5 class="titulos fw-bold">Precio Total De Cambio:</h5>
+          <h5 id="precioTotal" class="fw-bold precio">$0</h5>
+        </div>
+        
+        <div class="text-center"> 
+          <button type="button" class="btn titulos" style="background-color: #012E4A;" id="btnRegistrarDetalleDevolucionCompra" style="margin: 0 auto">Finalizar Registro</button>
+        </div>
+        <br>
+
+        
+        <input type="hidden" name="codigoCompra" value="{{ compra.comCodigo }}">
+        <input type="hidden" name="usuario" value="{{ usuario.id }}">
+        <!-- Hidden field to store the selected products -->
+        <input type="hidden" name="productosDevueltos" id="productosDevueltos">
+
+      </form>
+
+
+      <!-- The Modal -->
+      <div class="modal" id="modalProducto">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header colorSecundario text-white tituloModal">
+              <h4 class="fw-bold titulos">Entrada Producto Devolución</h4>
+              <button type="button" class="btn-close bg-white text-white" data-bs-dismiss="modal"></button>
+            </div>
+
+
+            <!-- Modal body -->
+            <div class="modal-body ">
+              <form id="frmEntradaProducto" action="">
+                <div class="form-group row">
+                  <div class="col-lg-12 mb-3">
+                    <label for="txtProducto" class="fw-bold">Productos Devuelto:</label>
+                    <input type="text" id="txtBusquedaProducto" class="form-control" placeholder="Buscar producto">
+                    <select name="txtProducto" id="txtProducto" class="form-select" onchange="precioAuto(); UnidadAut()">
+                      <option value="">Seleccione</option>
+                      {% for detalle in compra.detallecompra_set.all %}
+                        <option value="{{detalle.detProducto.id}}" data-producto-id="{{detalle.detProducto.proCodigo}}">
+                          {{detalle.detProducto.proCodigo}}-{{detalle.detProducto.proNombre}}
+                        </option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group row mb-4">
+                  <div class="col-lg-4">
+                    <label for="cantidad" class="form-label fw-bold">Cantidad Devuelta:</label>
+                    <input type="number" name="cantidad" id="cantidad" class="form-control calcular-precio" onchange="validarCantidad()">
+                  </div>
+
+                  <div class="col-lg-4">
+                    <label for="txtUnidadMedida" class="fw-bold" >Unidad Medida:</label>
+                    <div class="input-group">
+                      <input type="text" name="txtUnidadMedida" id="txtUnidadMedida" class="form-control" disabled>
+                    </div>
+                  </div>
+            
+                  <div class="col-lg-4">
+                    <label for="precio" class="form-label fw-bold">Precio Producto(Unidad):</label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="number" name="precio" id="precio" class="form-control calcular-precio" disabled>
+                    </div>
+                  </div>
+
+                </div>
+                
+                <div class="col-lg-12">
+                  <label for="MetodoDevolucion" class="form-label fw-bold">Metodo de devolución:</label>
+                  <select name="MetodoDevolucion" id="MetodoDevolucion" class="form-select">
+                      <option value="">Seleccione una opción</option>
+                      <option value="Devolver dinero">Devolver dinero</option>
+                  </select>
+                </div>
+                
+                <div class="text-center col-lg-12 mb-4 mt-4">
+                  <h5 class="fw-bold">Precio Acumulado:</h5>
+                  <h5 id="precioAcumulado" class="fw-bold">$0</h5>
+                </div>
+
+                <div class="text-center">
+                  <button type="button" class="btn colorSecundario" id="btnAgregarProductoDetalleDevolucion" data-bs-dismiss="modal">Agregar Detalle</button>
+                </div>
+
+              </form>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button type="button" class="btn-danger" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      var precios = document.querySelectorAll('.precio');
+      precios.forEach(function (precio) {
+          var precio_sinFormato = precio.textContent.trim().replace('$', '');
+          var precio_formateado = parseFloat(precio_sinFormato).toLocaleString('es-CO', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 2
+          });
+
+          precio.textContent = '$ ' + precio_formateado;
+      });
+  });
+</script>
+
+{% endblock %}
+{% block piePagina %}
+    {% include "index/piePagina.html" %}
+{% endblock %}

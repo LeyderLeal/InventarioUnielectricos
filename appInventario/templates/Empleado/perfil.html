@@ -1,0 +1,69 @@
+{% extends "index/index.html" %}
+
+{% block encabezado %}
+    {% include "index/encabezado.html" %}
+{% endblock %}
+
+{% block menu %}
+    {% include "Empleado/menuE.html" %}
+{% endblock %}
+
+{% block contenido %}
+
+<div class="container mt-5">
+    
+    <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-9">
+            <div class="text-center">
+
+                <table id="tblProductos" class="table custom-table table-hover table-bordered" style="font-size: 14px;">
+                    <thead class="colorSecundario text-white">
+                        <tr class="colorSecundario titulos">
+                            <th colspan="7" class="text-white text-center">USUARIO</th>
+                        </tr>
+                        <tr class="colorPrimario">
+                            <th class = "text-center">ID</th>
+                            <th class = "text-center">NOMBRE COMPLETO</th>
+                            <th class = "text-center">APELLIDO COMPLETO</th>
+                            <th class = "text-center">NOMBRE USUARIO</th>
+                            <th class = "text-center">CORREO ELECTRONICO</th>
+                            <th class = "text-center">ROL</th>
+                            <th class = "text-center">ACCIÓN</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white">
+                        
+                        <tr>
+                            <td class = "text-center">{{usuario.id}}</td>
+                            <td class = "text-center">{{usuario.first_name}}</td>
+                            <td class = "text-center">{{usuario.last_name}}</td>
+                            <td class = "text-center">{{usuario.username}}</td>
+                            <td class = "text-center">{{usuario.email}}</td>
+                            <td class="text-center">
+                                {% for grupo in usuario.groups.all %}
+                                    {{ grupo.name }}
+                                    {% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td class="text-center" style="font-size: 3vh;">
+                                {% if usuario.id == request.user.id %}
+                                    <a href="/editarUsuario/{{usuario.id}}/" style="text-decoration: none;"><i class="fa fa-edit text-warning"></i></a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block piePagina %}
+    {% include "index/piePagina.html" %}
+{% endblock %}

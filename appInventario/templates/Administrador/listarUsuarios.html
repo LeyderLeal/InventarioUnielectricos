@@ -1,0 +1,91 @@
+{% extends "index/index.html" %}
+
+{% block encabezado %}
+    {% include "index/encabezado.html" %}
+{% endblock %}
+
+{% block menu %}
+    {% include "Administrador/menu.html" %}
+{% endblock %}
+
+{% block contenido %}
+
+<div class="container">
+    <div>
+        <div class="was-validated">
+            <div class="row d-flex">
+                <div class="p-1 text-center">
+            
+                    <div class="d-flex justify-content-center align-items-center">
+                        <a href="/vistaRegistrarUsuario/">
+                        <button class="btn colorSecundario titulos">Registrar Usuarios</button>
+                        </a>
+                    </div>
+            
+                    <table id="tblProductos" class="table custom-table table-hover table-bordered" style="font-size: 14px;"><br><br>
+
+                        <thead class="colorSecundario text-white">
+                            <tr class="colorSecundario">
+                                <th colspan="8" class="text-white text-center">USUARIOS REGISTRADOS</th>
+                            </tr>
+                            <tr class="colorPrimario">
+                                <th class = "top-left">Id</th>
+                                <th class = "top-left">Nombre Completo</th>
+                                <th class = "top-left">Apellido Completo</th>
+                                <th class = "top-left">Nombre Usuario</th>
+                                <th class = "top-left">Correo Electrónico</th>
+                                <th class = "top-left">Estado</th>
+                                <th class = "top-left">Rol</th>
+                                <th class = "top-left">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for usuario in listaUsuarios %}
+                                <tr>
+                                    <td class = "top-left">{{usuario.id}}</td>
+                                    <td class = "top-left">{{usuario.first_name}}</td>
+                                    <td class = "top-left">{{usuario.last_name}}</td>
+                                    <td class = "top-left">{{usuario.username}}</td>
+                                    <td class = "top-left">{{usuario.email}}</td>
+                                    <td class = "top-left">{{usuario.userEstado}}</td>
+
+                                    <td class="top-left">
+                                        {% for grupo in usuario.groups.all %}
+                                            {{ grupo.name }}
+                                            {% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </td>
+
+                                    <td class="text-center d-flex align-items-center justify-content-center" style="font-size: 3vh;">
+                                        {% if usuario.id == request.user.id %}
+                                            <a href="/editarUsuario/{{usuario.id}}/" style="text-decoration: none;"><i class="fa fa-edit text-warning"></i></a>
+                                        {% endif %}
+
+                                        <div class="form-check form-switch d-flex align-items-center justify-content-center" style="font-size: 2.5vh;">
+                                            <input class="form-check-input btn switch-checkbox" type="checkbox" id="flexSwitchCheckChecked" {% if usuario.userEstado == "Activo" %} checked {% endif %} data-user-id="{{usuario.id}}">
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Llama a la función para cargar DataTable en la tabla 'tblProductos'
+        cargarDataTable($("#tblProductos"), "Inventario de Productos", 7);
+    });
+</script>
+
+{% endblock %}
+
+{% block piePagina %}
+    {% include "index/piePagina.html" %}
+{% endblock %}
